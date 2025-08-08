@@ -5,11 +5,32 @@ import joblib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
+import base64
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 
-# Load model and scaler
+# ==== Function to set background image ====
+def set_background(image_file):
+    with open(image_file, "rb") as img_file:
+        encoded_string = base64.b64encode(img_file.read()).decode()
+    page_bg_img = f"""
+    <style>
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{encoded_string}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+    </style>
+    """
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+# ==== Set page config and background ====
+st.set_page_config(page_title="Loan Default Prediction", layout="wide")
+set_background("bank.jpg")
+
+# ==== Load model and scaler ====
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
 
@@ -19,11 +40,11 @@ try:
 except FileNotFoundError:
     data = None
 
-st.set_page_config(page_title="Loan Default Prediction", layout="wide")
+# ==== Title ====
 st.title("🏦 Loan Default Prediction App")
 st.write("Enter applicant details to predict loan default risk and view related visuals.")
 
-# Input layout
+# ==== Input layout ====
 col1, col2 = st.columns(2)
 with col1:
     gender = st.selectbox("Gender", ["Male", "Female"])
@@ -39,7 +60,7 @@ with col2:
     credit_history = st.selectbox("Credit History", ["Good (1)", "Bad (0)"])
     property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
 
-# Convert inputs
+# ==== Convert inputs ====
 gender = 1 if gender == "Male" else 0
 married = 1 if married == "Yes" else 0
 dependents = 3 if dependents == "3+" else int(dependents)
@@ -48,18 +69,17 @@ self_employed = 1 if self_employed == "Yes" else 0
 credit_history = 1 if credit_history == "Good (1)" else 0
 property_area = {"Urban": 2, "Semiurban": 1, "Rural": 0}[property_area]
 
-# Prepare for model
+# ==== Prepare for model ====
 input_data = np.array([[gender, married, dependents, education,
                         self_employed, applicant_income, coapplicant_income,
                         loan_amount, loan_amount_term, credit_history, property_area]])
 input_scaled = scaler.transform(input_data)
 
-# Prediction and visuals
+# ==== Prediction and visuals ====
 if st.button("Predict Loan Default"):
     prediction = model.predict(input_scaled)
     prob = model.predict_proba(input_scaled)[0][1] if hasattr(model, "predict_proba") else None
 
-    # Prediction result
     if prediction[0] == 1:
         result_text = "❌ High Risk: Loan Likely to Default."
         st.error(result_text)
@@ -73,10 +93,9 @@ if st.button("Predict Loan Default"):
     st.markdown("---")
     st.subheader("📊 Visual Insights")
 
-    # Store plots for both display and PDF
     plot_images = []
-
     colA, colB = st.columns(2)
+
     # 1. Feature Importance
     with colA:
         if hasattr(model, "feature_importances_"):
@@ -138,20 +157,18 @@ if st.button("Predict Loan Default"):
             buf.seek(0)
             plot_images.append(("Prediction Probability", buf))
 
-    # ===== Generate PDF Report =====
+    # ==== Generate PDF ====
     pdf_buffer = BytesIO()
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     styles = getSampleStyleSheet()
     elements = []
-
     elements.append(Paragraph("Loan Default Prediction Report", styles["Title"]))
     elements.append(Spacer(1, 12))
     elements.append(Paragraph(f"Result: {result_text}", styles["Normal"]))
     elements.append(Paragraph(prob_text, styles["Normal"]))
     elements.append(Spacer(1, 12))
 
-    # Add input details
-    elements.append(Paragraph("Applicant Details:", styles["Heading2"]))
+    # Applicant details
     details = f"""
     Gender: {gender} | Married: {married} | Dependents: {dependents} | Education: {education} |
     Self Employed: {self_employed} | Applicant Income: {applicant_income} |
@@ -159,6 +176,7 @@ if st.button("Predict Loan Default"):
     Loan Term: {loan_amount_term} | Credit History: {credit_history} |
     Property Area: {property_area}
     """
+    elements.append(Paragraph("Applicant Details:", styles["Heading2"]))
     elements.append(Paragraph(details, styles["Normal"]))
     elements.append(Spacer(1, 12))
 
