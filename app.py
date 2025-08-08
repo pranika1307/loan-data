@@ -22,9 +22,6 @@ def set_background(image_file):
         background-position: center;
         background-attachment: fixed;
     }}
-    h1 {{
-        color: white !important;
-    }}
     </style>
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
