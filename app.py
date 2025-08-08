@@ -23,8 +23,6 @@ def set_background(image_file):
         background-attachment: fixed;
         color: white !important;
     }}
-
-    /* Dark transparent overlay */
     .stApp::before {{
         content: "";
         position: fixed;
@@ -35,18 +33,31 @@ def set_background(image_file):
         background-color: rgba(0,0,0,0.5);
         z-index: 0;
     }}
-
     main, header, footer {{
         position: relative;
         z-index: 1;
     }}
-
     h1, h2, h3, h4, h5, h6, p, label, span {{
         color: white !important;
     }}
     </style>
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
+
+# ==== Dark theme helper for plots ====
+def apply_dark_theme(fig, ax):
+    fig.patch.set_facecolor('#0e1117')     # Dark outer background
+    ax.set_facecolor('#0e1117')            # Dark plot area
+    ax.tick_params(colors='white')
+    for spine in ax.spines.values():
+        spine.set_color('white')
+    ax.xaxis.label.set_color('white')
+    ax.yaxis.label.set_color('white')
+    legend = ax.get_legend()
+    if legend:
+        for text in legend.get_texts():
+            text.set_color('white')
+    return fig, ax
 
 # ==== Page config & background ====
 st.set_page_config(page_title="Loan Default Prediction", layout="wide")
@@ -56,7 +67,7 @@ set_background("bank1.jpg")
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
 
-# Try loading dataset for visuals
+# Load dataset for visuals if available
 try:
     data = pd.read_csv("loan_data.csv")
 except FileNotFoundError:
@@ -130,10 +141,10 @@ if st.button("Predict Loan Default"):
             fig, ax = plt.subplots(figsize=(5, 4))
             sns.barplot(data=importance, x="Importance", y="Feature", ax=ax, palette="viridis")
             ax.set_title("Feature Importance", color="white")
-            ax.tick_params(colors="white")
+            fig, ax = apply_dark_theme(fig, ax)
             st.pyplot(fig)
             buf = BytesIO()
-            fig.savefig(buf, format="png")
+            fig.savefig(buf, format="png", facecolor=fig.get_facecolor())
             buf.seek(0)
             plot_images.append(("Feature Importance", buf))
 
@@ -141,14 +152,14 @@ if st.button("Predict Loan Default"):
     with colB:
         if data is not None:
             fig, ax = plt.subplots(figsize=(5, 4))
-            sns.scatterplot(data=data, x="ApplicantIncome", y="LoanAmount", alpha=0.6)
+            sns.scatterplot(data=data, x="ApplicantIncome", y="LoanAmount", alpha=0.6, ax=ax)
             ax.scatter(applicant_income, loan_amount, color="red", s=100, label="You")
             ax.legend()
             ax.set_title("Applicant Income vs Loan Amount", color="white")
-            ax.tick_params(colors="white")
+            fig, ax = apply_dark_theme(fig, ax)
             st.pyplot(fig)
             buf = BytesIO()
-            fig.savefig(buf, format="png")
+            fig.savefig(buf, format="png", facecolor=fig.get_facecolor())
             buf.seek(0)
             plot_images.append(("Applicant Income vs Loan Amount", buf))
 
@@ -161,10 +172,10 @@ if st.button("Predict Loan Default"):
             ax.axvline(loan_amount, color="red", linestyle="--", label="You")
             ax.legend()
             ax.set_title("Loan Amount Distribution", color="white")
-            ax.tick_params(colors="white")
+            fig, ax = apply_dark_theme(fig, ax)
             st.pyplot(fig)
             buf = BytesIO()
-            fig.savefig(buf, format="png")
+            fig.savefig(buf, format="png", facecolor=fig.get_facecolor())
             buf.seek(0)
             plot_images.append(("Loan Amount Distribution", buf))
 
@@ -176,10 +187,10 @@ if st.button("Predict Loan Default"):
             ax.set_xlim(0, 1)
             ax.text(prob + 0.02, 0, f"{prob*100:.1f}%", color='white', va='center')
             ax.set_title("Prediction Probability", color="white")
-            ax.tick_params(colors="white")
+            fig, ax = apply_dark_theme(fig, ax)
             st.pyplot(fig)
             buf = BytesIO()
-            fig.savefig(buf, format="png")
+            fig.savefig(buf, format="png", facecolor=fig.get_facecolor())
             buf.seek(0)
             plot_images.append(("Prediction Probability", buf))
 
