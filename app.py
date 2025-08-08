@@ -22,13 +22,16 @@ def set_background(image_file):
         background-position: center;
         background-attachment: fixed;
     }}
+    h1 {{
+        color: white !important;
+    }}
     </style>
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
 # ==== Set page config and background ====
 st.set_page_config(page_title="Loan Default Prediction", layout="wide")
-set_background("bank.jpg")
+set_background("bank1.jpg")
 
 # ==== Load model and scaler ====
 model = joblib.load("model.pkl")
