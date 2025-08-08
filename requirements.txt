@@ -1,8 +1,8 @@
 streamlit
-pandas 
+pandas
 numpy
 scikit-learn
 seaborn
 joblib
 matplotlib
-
+reportlab
