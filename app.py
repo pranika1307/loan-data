@@ -10,7 +10,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 
-# ==== Function to set background image ====
+# ==== Function to set background with overlay ====
 def set_background(image_file):
     with open(image_file, "rb") as img_file:
         encoded_string = base64.b64encode(img_file.read()).decode()
@@ -21,15 +21,34 @@ def set_background(image_file):
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        color: white !important;
     }}
-    h1 {{
+
+    /* Dark transparent overlay */
+    .stApp::before {{
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 0;
+    }}
+
+    main, header, footer {{
+        position: relative;
+        z-index: 1;
+    }}
+
+    h1, h2, h3, h4, h5, h6, p, label, span {{
         color: white !important;
     }}
     </style>
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# ==== Set page config and background ====
+# ==== Page config & background ====
 st.set_page_config(page_title="Loan Default Prediction", layout="wide")
 set_background("bank1.jpg")
 
@@ -110,7 +129,8 @@ if st.button("Predict Loan Default"):
             }).sort_values(by="Importance", ascending=False)
             fig, ax = plt.subplots(figsize=(5, 4))
             sns.barplot(data=importance, x="Importance", y="Feature", ax=ax, palette="viridis")
-            ax.set_title("Feature Importance")
+            ax.set_title("Feature Importance", color="white")
+            ax.tick_params(colors="white")
             st.pyplot(fig)
             buf = BytesIO()
             fig.savefig(buf, format="png")
@@ -124,7 +144,8 @@ if st.button("Predict Loan Default"):
             sns.scatterplot(data=data, x="ApplicantIncome", y="LoanAmount", alpha=0.6)
             ax.scatter(applicant_income, loan_amount, color="red", s=100, label="You")
             ax.legend()
-            ax.set_title("Applicant Income vs Loan Amount")
+            ax.set_title("Applicant Income vs Loan Amount", color="white")
+            ax.tick_params(colors="white")
             st.pyplot(fig)
             buf = BytesIO()
             fig.savefig(buf, format="png")
@@ -139,7 +160,8 @@ if st.button("Predict Loan Default"):
             sns.histplot(data["LoanAmount"], bins=20, kde=True, ax=ax, color="skyblue")
             ax.axvline(loan_amount, color="red", linestyle="--", label="You")
             ax.legend()
-            ax.set_title("Loan Amount Distribution")
+            ax.set_title("Loan Amount Distribution", color="white")
+            ax.tick_params(colors="white")
             st.pyplot(fig)
             buf = BytesIO()
             fig.savefig(buf, format="png")
@@ -152,8 +174,9 @@ if st.button("Predict Loan Default"):
             fig, ax = plt.subplots(figsize=(5, 2))
             ax.barh(["Default Probability"], [prob], color="red" if prob > 0.5 else "green")
             ax.set_xlim(0, 1)
-            ax.text(prob + 0.02, 0, f"{prob*100:.1f}%", color='black', va='center')
-            ax.set_title("Prediction Probability")
+            ax.text(prob + 0.02, 0, f"{prob*100:.1f}%", color='white', va='center')
+            ax.set_title("Prediction Probability", color="white")
+            ax.tick_params(colors="white")
             st.pyplot(fig)
             buf = BytesIO()
             fig.savefig(buf, format="png")
