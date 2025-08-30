@@ -29,7 +29,7 @@ An interactive web app built with **Streamlit** that predicts whether a loan app
 
 1. Clone the repository  
    ```bash
-   git clone https://github.com/yourusername/loan-default-prediction.git
+   git clone https://github.com/pranika1307/loan-default-prediction.git
    cd loan-default-prediction
    ```
 
@@ -61,33 +61,48 @@ The model is trained on **loan applicant data** (features like gender, income, d
 ---
 
 ## 🌍 Live Demo  
-🔗 [Streamlit Deployed App](https://your-streamlit-link.streamlit.app)  
+🔗 [Streamlit Deployed App]
+(loan-data-56npspdvjxnubrbggwt9ac.streamlit.app)  
 
 ---
 
 ## 📽️ Demo Video  
-🎥 [YouTube / Google Drive Demo](https://your-demo-link.com)  
+🎥 [YouTube / Google Drive Demo]
+(https://drive.google.com/file/d/1D3YdXS_VtP7OROo9TCmp3tv6Xz1sY09d/view?usp=sharing)  
 
 ---
 
 ## 📑 Project Presentation  
-📂 [View Presentation Slides](https://your-slides-link.com)  
+📂 [View Presentation Slides]
+(https://docs.google.com/presentation/d/1wBi68XpP6KO9WmZN0kYgKvH_g4guwxvS/edit?usp=sharing&ouid=105611852932502833748&rtpof=true&sd=true)  
 
 ---
 
 ## 📸 Screenshots  
 
-### Home Screen  
-![Home](screenshots/home.png)  
+- **Home Page**
+  ![Home Page](screenshot1.png)
 
-### Prediction Result  
-![Result](screenshots/result.png)  
+- **Prediction Result**
+  ![Prediction Result](screenshot2.png)
 
-### Visual Insights  
-![Charts](screenshots/charts.png)  
+- **Visual Insights**
+  ![Visual Insights](screenshot3.png)
+
+- **PDF Report Download**
+  ![PDF Report Download](screenshot4.png)
+
 
 ---
 
+## 💡 Future Enhancements
+
+-Deploy on cloud (AWS/GCP) for scalability
+-Add more features for prediction (employment type, assets, etc.)
+-Improve model accuracy with hyperparameter tuning
+-Mobile-friendly UI
+
+
 ## 👨‍💻 Author  
-Developed by **[Your Name]**  
+Developed by Pranika Seth 
 For Hackathon Submission 🚀  
