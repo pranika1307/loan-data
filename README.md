@@ -62,7 +62,7 @@ The model is trained on **loan applicant data** (features like gender, income, d
 
 ## 🌍 Live Demo  
 🔗 [Streamlit Deployed App]
-(loan-data-56npspdvjxnubrbggwt9ac.streamlit.app)  
+loan-data-56npspdvjxnubrbggwt9ac.streamlit.app
 
 ---
 
