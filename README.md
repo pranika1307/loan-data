@@ -81,16 +81,20 @@ The model is trained on **loan applicant data** (features like gender, income, d
 ## 📸 Screenshots  
 
 - **Home Page**
-  ![Home Page](screenshot1.png)
+  ![Home Page]
+  (Screenshot1.png)
 
 - **Prediction Result**
-  ![Prediction Result](screenshot2.png)
+  ![Prediction Result]
+  (Screenshot2.png)
 
 - **Visual Insights**
-  ![Visual Insights](screenshot3.png)
+  ![Visual Insights]
+  (Screenshot3.png)
 
 - **PDF Report Download**
-  ![PDF Report Download](screenshot4.png)
+  ![PDF Report Download]
+  (Screenshot4.png)
 
 
 ---
